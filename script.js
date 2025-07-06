@@ -80,6 +80,11 @@ const GameController = ((
   ];
 
   let activePlayer = players[0];
+  let winner = "";
+  let gameOver = false;
+  let tie = false;
+
+  const isGameOver = () => gameOver;
 
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -101,11 +106,9 @@ const GameController = ((
   };
 
   const isWinningRound = (playerMoves) => {
-    let winner = winConditions.some((winCon) =>
+    return winConditions.some((winCon) =>
       winCon.every((cell) => playerMoves.includes(cell))
-    );
-
-    return winner;
+    ); //retuns a boolean based on if a win condition is found
   };
 
   const resetGame = () => {
@@ -116,12 +119,20 @@ const GameController = ((
     }
     // Start new game from round 1
     roundCounter = 1;
+    gameOver = false; // Allow playing again
     printNewRound();
   };
 
   let roundCounter = 1;
 
   const playRound = (square) => {
+    if (gameOver)
+      return {
+        gameEnded: true,
+        message: "Game has ended. Reset board to play again",
+        winner,
+      };
+
     console.log(`Round #${roundCounter}`);
     console.log(`${getActivePlayer().name} mark is ${getActivePlayer().mark}`);
     const markPlaced = GameBoard.placeMark(square, getActivePlayer().mark);
@@ -136,28 +147,133 @@ const GameController = ((
 
         if (isWinningRound(playerCellsMarked)) {
           let playerWon = getActivePlayer();
+          winner = playerWon.name;
           console.log(playerWon.name + " wins");
-          resetGame();
-          return;
+          gameOver = true; //prevents more moves
+          /* switchPlayerTurn();
+          resetGame(); */
+
+          return {
+            gameEnded: true,
+            message: `${playerWon.name} wins!`,
+            winner,
+          };
         }
       }
 
       if (roundCounter === 9) {
         console.log("It's a tie!");
-        resetGame();
-        return;
+        gameOver = true;
+        tie = true;
+        /* switchPlayerTurn();
+        resetGame(); */
+        return { gameEnded: true, message: "It's a tie!", winner: "" };
       }
 
       switchPlayerTurn();
       roundCounter++;
     }
     printNewRound();
+    return { gameEnded: false };
   };
 
   // Start of the game
   printNewRound();
-  //returning getBoard method only for testing in console. It will be removed later on
-  return { playRound, getActivePlayer, getBoard: () => GameBoard.getBoard() };
+
+  return {
+    playRound,
+    getActivePlayer,
+    switchPlayerTurn,
+    getBoard: () => GameBoard.getBoard(),
+    resetGame,
+    isGameOver,
+  };
 })();
 
-const game = GameController;
+const DisplayController = (() => {
+  const game = GameController;
+  const playerTurn = document.querySelector(".turn");
+  const boardContainer = document.querySelector(".board");
+  const resetBtn = document.querySelector("button");
+
+  // Add one listener to the container
+  boardContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("cell")) {
+      const row = parseInt(e.target.dataset.row);
+      const col = parseInt(e.target.dataset.col);
+      const board = game.getBoard();
+      const cell = board[row][col];
+      //Store the state of the game to show win/tie message
+      const result = game.playRound(cell);
+
+      if (result && result.gameEnded) {
+        showMessage(result.winner, result.gameEnded);
+      }
+
+      renderBoard();
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    game.resetGame();
+    game.switchPlayerTurn(); //This might be removed later
+    renderBoard();
+    clearMessage();
+  });
+
+  const renderBoard = () => {
+    boardContainer.textContent = "";
+    const board = game.getBoard();
+    const activePlayer = game.getActivePlayer().name;
+
+    if (game.isGameOver()) {
+      playerTurn.textContent = "Game Over";
+    } else {
+      playerTurn.textContent = activePlayer;
+    }
+
+    board.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        const cellDiv = document.createElement("div");
+        cellDiv.classList.add("cell");
+        cellDiv.dataset.row = i;
+        cellDiv.dataset.col = j;
+
+        const value = cell.getValue();
+        if (value === 1) cellDiv.textContent = "X";
+        else if (value === 2) cellDiv.textContent = "O";
+
+        boardContainer.appendChild(cellDiv);
+      });
+    });
+  };
+
+  const showMessage = (winner, gameEnded) => {
+    const winnerMessage = document.querySelector(".winner-message");
+    const gameoverMessage = document.querySelector(".gameover-message");
+
+    if (!winner && gameEnded) {
+      winnerMessage.textContent = "It's a Tie!";
+      playerTurn.textContent = "Game Over";
+    }
+
+    if (winner) {
+      winnerMessage.textContent = `${winner} is the winner!`;
+      playerTurn.textContent = "Game Over";
+    }
+    winnerMessage.style.display = "block";
+    gameoverMessage.style.display = "block";
+  };
+
+  const clearMessage = () => {
+    const winnerMessage = document.querySelector(".winner-message");
+    const gameoverMessage = document.querySelector(".gameover-message");
+    gameoverMessage.style.display = "none";
+    winnerMessage.style.display = "none";
+  };
+
+  renderBoard();
+})();
+
+//Hacer commit
+//Revisar aplicar sugerencias de Claudita sobre el player turn display cuando termina el juego

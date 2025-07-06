@@ -3,3 +3,24 @@ h1{
     font-weight: bold;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.container{
+    border: solid 1px blueviolet;
+    text-align: center;
+}
+
+.board {
+    display: grid;
+    grid-template: repeat(3, 100px) / repeat(3, 100px);
+    border: solid 1px green;
+    text-align: center;
+    justify-content: center;
+}
+
+.cell {
+    border: solid orange 1px;
+}
+
+.gameover-message {
+    display: none;
+}
