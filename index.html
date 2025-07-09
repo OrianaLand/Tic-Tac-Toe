@@ -7,25 +7,32 @@
     <title>Tic Tac Toe</title>
   </head>
   <body>
-    <h1>Tic Tac Toe</h1>
+    <div class="header">
+      <h1>Tic Tac Toe</h1>
+    </div>
+
     <div class="container">
-      <div class="players">
-        <label for="player-one">Player One:</label>
-        <input
-          type="text"
-          name="playerOne"
-          placeholder="Enter you name"
-          maxlength="15"
-          id="player-one"
-        />
-        <label for="player-two">Player Two:</label>
-        <input
-          type="text"
-          name="playerTwo"
-          placeholder="Enter you name"
-          maxlength="15"
-          id="player-two"
-        />
+      <div class="players-div">
+        <div class="player">
+          <label for="player-one">Player One:</label>
+          <input
+            type="text"
+            name="playerOne"
+            placeholder="Enter you name"
+            maxlength="15"
+            id="player-one"
+          />
+        </div>
+        <div class="player">
+          <label for="player-two">Player Two:</label>
+          <input
+            type="text"
+            name="playerTwo"
+            placeholder="Enter you name"
+            maxlength="15"
+            id="player-two"
+          />
+        </div>
       </div>
       <h1 class="turn"></h1>
       <div class="board disabled"></div>
@@ -34,7 +41,7 @@
         >Game has ended. Reset the board to play again</span
       >
       <button id="start-game">Start</button>
-      <button id="reset-game">Reset board</button>
+      <button id="reset-board">Reset board</button>
       <button id="new-game">New Game</button>
     </div>
     <script src="script.js"></script>

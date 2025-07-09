@@ -190,7 +190,7 @@ const DisplayController = (() => {
   const playerTurn = document.querySelector(".turn");
   const boardContainer = document.querySelector(".board");
   const startBtn = document.querySelector("#start-game");
-  const resetBtn = document.querySelector("#reset-game");
+  const resetBtn = document.querySelector("#reset-board");
   const newGameBtn = document.querySelector("#new-game");
   const playerOneInput = document.querySelector("#player-one");
   const playerTwoInput = document.querySelector("#player-two");
