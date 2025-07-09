@@ -9,7 +9,7 @@ const GameBoard = (() => {
     for (let i = 0; i < rows; i++) {
       board[i] = [];
       for (let j = 0; j < columns; j++) {
-        board[i].push(cell(cellCounter));
+        board[i].push(cell(cellCounter)); // Assing a number 1-9 to each cell to check win conditions
         cellCounter++;
       }
     }
@@ -214,6 +214,7 @@ const DisplayController = (() => {
     startBtn.style.display = "none";
     resetBtn.style.display = "inline";
     newGameBtn.style.display = "inline";
+    playerTurn.textContent = game.getActivePlayer().name;
 
     playerOneInput.disabled = true;
     playerTwoInput.disabled = true;
@@ -247,15 +248,19 @@ const DisplayController = (() => {
 
   newGameBtn.addEventListener("click", () => {
     boardContainer.classList.add("disabled");
+
     clearMessage();
     startBtn.style.display = "inline";
     resetBtn.style.display = "none";
     newGameBtn.style.display = "none";
+    playerTurn.textContent = "";
 
     playerOneInput.disabled = false;
     playerTwoInput.disabled = false;
     playerOneInput.value = "";
     playerTwoInput.value = "";
+    game.resetGame();
+    renderBoard();
   });
 
   const renderBoard = () => {
@@ -308,7 +313,6 @@ const DisplayController = (() => {
     const gameoverMessage = document.querySelector(".gameover-message");
     gameoverMessage.style.display = "none";
     winnerMessage.style.display = "none";
-    playerTurn.textContent = "";
   };
 
   renderBoard();
