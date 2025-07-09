@@ -91,7 +91,6 @@ const GameController = (() => {
 
   const printNewRound = () => {
     GameBoard.printBoard();
-    console.log(`${getActivePlayer().name}'s turn.`);
   };
 
   const storeMarkedCell = (player, square) => {
@@ -131,25 +130,19 @@ const GameController = (() => {
         winner,
       };
 
-    console.log(`Round #${roundCounter}`);
-    console.log(`${getActivePlayer().name} mark is ${getActivePlayer().mark}`);
     const markPlaced = GameBoard.placeMark(square, getActivePlayer().mark);
+
     if (markPlaced) {
       storeMarkedCell(getActivePlayer(), square);
 
       if (roundCounter > 4) {
         //Check if the mark placed wins the game
-        console.log("5 MOVES. CHECK FOR A WINNER!");
         let playerCellsMarked = getActivePlayer().cellsMarked;
-        console.log(isWinningRound(playerCellsMarked));
 
         if (isWinningRound(playerCellsMarked)) {
           let playerWon = getActivePlayer();
           winner = playerWon.name;
-          console.log(playerWon.name + " wins");
           gameOver = true; //prevents more moves
-          /* switchPlayerTurn();
-          resetGame(); */
 
           return {
             gameEnded: true,
@@ -160,11 +153,9 @@ const GameController = (() => {
       }
 
       if (roundCounter === 9) {
-        console.log("It's a tie!");
         gameOver = true;
         tie = true;
-        /* switchPlayerTurn();
-        resetGame(); */
+
         return { gameEnded: true, message: "It's a tie!", winner: "" };
       }
 
