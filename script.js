@@ -9,7 +9,7 @@ const GameBoard = (() => {
     for (let i = 0; i < rows; i++) {
       board[i] = [];
       for (let j = 0; j < columns; j++) {
-        board[i].push(cell(cellCounter)); // Assing a number 1-9 to each cell to check win conditions
+        board[i].push(cell(cellCounter)); // Assign a number 1-9 to each cell to check win conditions
         cellCounter++;
       }
     }
@@ -66,7 +66,7 @@ const GameController = (() => {
 
   // Win conditions use cell numbers 1–9 (not array indices):
   const winConditions = [
-    [1, 2, 3], //these match cell.cellNumber, not board[row][col] indices
+    [1, 2, 3],
     [4, 5, 6],
     [7, 8, 9],
     [1, 4, 7],
@@ -111,6 +111,7 @@ const GameController = (() => {
   const resetGame = () => {
     // Reset game board and player states
     GameBoard.reset();
+    activePlayer = players[0];
     for (let i = 0; i < players.length; i++) {
       players[i].cellsMarked = [];
     }
@@ -240,8 +241,13 @@ const DisplayController = (() => {
   });
 
   resetBtn.addEventListener("click", () => {
+    const currentPlayer = game.getActivePlayer();
     game.resetGame();
-    game.switchPlayerTurn(); //This might be removed later
+
+    //Keeps the same active player so that only the board is reset
+    if (currentPlayer.mark !== 1) {
+      game.switchPlayerTurn();
+    }
     renderBoard();
     clearMessage();
   });
