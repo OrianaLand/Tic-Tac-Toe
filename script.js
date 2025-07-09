@@ -50,18 +50,15 @@ function cell(cellNum) {
   return { addMark, getValue, cellNumber };
 }
 
-const GameController = ((
-  playerOneName = "Player one (X)",
-  playerTwoName = "Player Two (O)"
-) => {
-  const players = [
+const GameController = (() => {
+  let players = [
     {
-      name: playerOneName,
+      name: "",
       mark: 1,
       cellsMarked: [],
     },
     {
-      name: playerTwoName,
+      name: "",
       mark: 2,
       cellsMarked: [],
     },
@@ -177,6 +174,11 @@ const GameController = ((
     return { gameEnded: false };
   };
 
+  const updatePlayersName = (playerOneName, playerTwoName) => {
+    players[0].name = playerOneName || "Player 1 (X)";
+    players[1].name = playerTwoName || "Player 2 (O)";
+  };
+
   // Start of the game
   printNewRound();
 
@@ -186,6 +188,7 @@ const GameController = ((
     switchPlayerTurn,
     getBoard: () => GameBoard.getBoard(),
     resetGame,
+    updatePlayersName,
     isGameOver,
   };
 })();
@@ -194,7 +197,28 @@ const DisplayController = (() => {
   const game = GameController;
   const playerTurn = document.querySelector(".turn");
   const boardContainer = document.querySelector(".board");
-  const resetBtn = document.querySelector("button");
+  const startBtn = document.querySelector("#start-game");
+  const resetBtn = document.querySelector("#reset-game");
+  const newGameBtn = document.querySelector("#new-game");
+  const playerOneInput = document.querySelector("#player-one");
+  const playerTwoInput = document.querySelector("#player-two");
+
+  startBtn.addEventListener("click", () => {
+    const playerOne = playerOneInput.value || "Player 1 (X)";
+    const playerTwo = playerTwoInput.value || "Player 2 (O)";
+
+    game.updatePlayersName(playerOne, playerTwo);
+    game.resetGame();
+    renderBoard();
+
+    startBtn.style.display = "none";
+    resetBtn.style.display = "inline";
+    newGameBtn.style.display = "inline";
+
+    playerOneInput.disabled = true;
+    playerTwoInput.disabled = true;
+    document.querySelector(".board").classList.remove("disabled");
+  });
 
   // Add one listener to the container
   boardContainer.addEventListener("click", (e) => {
@@ -219,6 +243,19 @@ const DisplayController = (() => {
     game.switchPlayerTurn(); //This might be removed later
     renderBoard();
     clearMessage();
+  });
+
+  newGameBtn.addEventListener("click", () => {
+    boardContainer.classList.add("disabled");
+    clearMessage();
+    startBtn.style.display = "inline";
+    resetBtn.style.display = "none";
+    newGameBtn.style.display = "none";
+
+    playerOneInput.disabled = false;
+    playerTwoInput.disabled = false;
+    playerOneInput.value = "";
+    playerTwoInput.value = "";
   });
 
   const renderBoard = () => {
@@ -266,14 +303,13 @@ const DisplayController = (() => {
   };
 
   const clearMessage = () => {
+    console.log("inside clear msg");
     const winnerMessage = document.querySelector(".winner-message");
     const gameoverMessage = document.querySelector(".gameover-message");
     gameoverMessage.style.display = "none";
     winnerMessage.style.display = "none";
+    playerTurn.textContent = "";
   };
 
   renderBoard();
 })();
-
-//Hacer commit
-//Revisar aplicar sugerencias de Claudita sobre el player turn display cuando termina el juego

@@ -17,10 +17,21 @@ h1{
     justify-content: center;
 }
 
+.board.disabled {
+    pointer-events: none;
+    /* Prevents any clicks */
+    opacity: 0.5;
+    filter: grayscale(80%);
+}
+
 .cell {
     border: solid orange 1px;
 }
 
 .gameover-message {
+    display: none;
+}
+
+#reset-game, #new-game{
     display: none;
 }

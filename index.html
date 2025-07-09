@@ -9,13 +9,33 @@
   <body>
     <h1>Tic Tac Toe</h1>
     <div class="container">
-      <button>Reset board</button>
+      <div class="players">
+        <label for="player-one">Player One:</label>
+        <input
+          type="text"
+          name="playerOne"
+          placeholder="Enter you name"
+          maxlength="15"
+          id="player-one"
+        />
+        <label for="player-two">Player Two:</label>
+        <input
+          type="text"
+          name="playerTwo"
+          placeholder="Enter you name"
+          maxlength="15"
+          id="player-two"
+        />
+      </div>
       <h1 class="turn"></h1>
-      <div class="board"></div>
+      <div class="board disabled"></div>
       <span class="winner-message"></span>
       <span class="gameover-message"
         >Game has ended. Reset the board to play again</span
       >
+      <button id="start-game">Start</button>
+      <button id="reset-game">Reset board</button>
+      <button id="new-game">New Game</button>
     </div>
     <script src="script.js"></script>
   </body>
