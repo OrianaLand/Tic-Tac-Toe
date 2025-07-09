@@ -249,7 +249,10 @@ const DisplayController = (() => {
   newGameBtn.addEventListener("click", () => {
     boardContainer.classList.add("disabled");
 
+    game.resetGame();
+    renderBoard();
     clearMessage();
+
     startBtn.style.display = "inline";
     resetBtn.style.display = "none";
     newGameBtn.style.display = "none";
@@ -259,8 +262,6 @@ const DisplayController = (() => {
     playerTwoInput.disabled = false;
     playerOneInput.value = "";
     playerTwoInput.value = "";
-    game.resetGame();
-    renderBoard();
   });
 
   const renderBoard = () => {
