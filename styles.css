@@ -1,12 +1,59 @@
-h1{
-    color: blue;
-    font-weight: bold;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ---Light CSS Reset--- */
+html {
+    font-size: 16px;
+    font-family: "Nunito Sans", sans-serif;
 }
 
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+.header{
+    text-align: center;
+    padding: 1em 0;
+}
 .container{
     border: solid 1px blueviolet;
     text-align: center;
+}
+
+.players-div{
+    display: flex;
+    justify-content: space-evenly;
+    margin: 2rem 0 1rem 0;
+}
+
+.player label{
+    display: block;
+}
+
+.player input{
+    max-width: 30vw;
+    text-align: center;
+}
+
+.span-div{
+    min-height: 8rem;
+    align-content: center;
+}
+.turn{
+    display: block;
+    align-content: center;
 }
 
 .board {
@@ -26,6 +73,7 @@ h1{
 
 .cell {
     border: solid orange 1px;
+    align-content: center;
 }
 
 .gameover-message {
@@ -34,4 +82,25 @@ h1{
 
 #reset-board, #new-game{
     display: none;
+}
+
+.button-div{
+    padding: 1.5em 0;
+}
+
+button{
+    margin: 0 1rem;
+    padding: 0.5em 1em;
+    border-radius: 6px;
+    font-family: "Nunito Sans", sans-serif;
+}
+
+@media only screen and (min-width: 725px){
+    .header{
+        padding: 2em 0;
+    }
+
+    .players-div{
+        margin: 2rem 0 0 0;
+    }
 }

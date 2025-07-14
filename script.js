@@ -19,11 +19,10 @@ const GameBoard = (() => {
 
   const placeMark = (square, playerMark) => {
     if (square.getValue()) {
-      console.log("cell is occupied! Try again");
+      //Don't place a mark on an occupied cell
       return false;
     }
     square.addMark(playerMark);
-    console.log("mark placed");
     return true;
   };
 
@@ -32,7 +31,6 @@ const GameBoard = (() => {
     const boardWithCellValues = board.map((row) =>
       row.map((cell) => cell.getValue())
     );
-    console.log(boardWithCellValues);
   };
 
   generateBoard();
@@ -98,7 +96,6 @@ const GameController = (() => {
     player.cellsMarked.sort(function (a, b) {
       return a - b;
     });
-    console.log(player.cellsMarked);
   };
 
   const isWinningRound = (playerMoves) => {
@@ -306,7 +303,6 @@ const DisplayController = (() => {
   };
 
   const clearMessage = () => {
-    console.log("inside clear msg");
     const winnerMessage = document.querySelector(".winner-message");
     const gameoverMessage = document.querySelector(".gameover-message");
     gameoverMessage.style.display = "none";

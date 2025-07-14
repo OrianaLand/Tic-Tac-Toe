@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" type="TEXT/CSS" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+      rel="stylesheet"
+    />
     <title>Tic Tac Toe</title>
   </head>
   <body>
@@ -34,15 +40,22 @@
           />
         </div>
       </div>
-      <h1 class="turn"></h1>
+
+      <div class="span-div">
+        <span class="turn"></span>
+        <span class="winner-message"></span>
+        <span class="gameover-message"
+          >Game has ended. Reset the board to play again</span
+        >
+      </div>
+
       <div class="board disabled"></div>
-      <span class="winner-message"></span>
-      <span class="gameover-message"
-        >Game has ended. Reset the board to play again</span
-      >
-      <button id="start-game">Start</button>
-      <button id="reset-board">Reset board</button>
-      <button id="new-game">New Game</button>
+
+      <div class="button-div">
+        <button id="start-game">Start</button>
+        <button id="reset-board">Reset board</button>
+        <button id="new-game">New Game</button>
+      </div>
     </div>
     <script src="script.js"></script>
   </body>
