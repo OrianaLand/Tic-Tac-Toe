@@ -54,11 +54,13 @@ const GameController = (() => {
       name: "",
       mark: 1,
       cellsMarked: [],
+      gamesWon: 0,
     },
     {
       name: "",
       mark: 2,
       cellsMarked: [],
+      gamesWon: 0,
     },
   ];
 
@@ -125,6 +127,7 @@ const GameController = (() => {
         gameEnded: true,
         message: "Game has ended. Reset board to play again",
         winner,
+        playerWon,
       };
 
     const markPlaced = GameBoard.placeMark(square, getActivePlayer().mark);
@@ -139,12 +142,14 @@ const GameController = (() => {
         if (isWinningRound(playerCellsMarked)) {
           let playerWon = getActivePlayer();
           winner = playerWon.name;
-          gameOver = true; //prevents more moves
+          playerWon.gamesWon++; // Increments winner's counter
+          gameOver = true; // Prevents more moves
 
           return {
             gameEnded: true,
             message: `${playerWon.name} wins!`,
             winner,
+            playerWon,
           };
         }
       }
@@ -168,6 +173,24 @@ const GameController = (() => {
     players[1].name = playerTwoName || "Player 2 (O)";
   };
 
+  const getGameStats = () => {
+    return {
+      playerOne: {
+        name: players[0].name,
+        gamesWon: players[0].gamesWon,
+      },
+      playerTwo: {
+        name: players[1].name,
+        gamesWon: players[1].gamesWon,
+      },
+    };
+  };
+
+  const resetPlayersWonGames = () => {
+    players[0].gamesWon = 0;
+    players[1].gamesWon = 0;
+  };
+
   // Start of the game
   printNewRound();
 
@@ -178,6 +201,8 @@ const GameController = (() => {
     getBoard: () => GameBoard.getBoard(),
     resetGame,
     updatePlayersName,
+    resetPlayersWonGames,
+    getGameStats,
     isGameOver,
   };
 })();
@@ -192,14 +217,23 @@ const DisplayController = (() => {
   const playerOneInput = document.querySelector("#player-one");
   const playerTwoInput = document.querySelector("#player-two");
   const turnText = "'s turn";
+  const playerOneScore = document.querySelector(".player-one-score");
+  const playerTwoScore = document.querySelector(".player-two-score");
+
+  const updateScoreDisplay = () => {
+    const stats = game.getGameStats();
+
+    playerOneScore.textContent = stats.playerOne.gamesWon;
+    playerTwoScore.textContent = stats.playerTwo.gamesWon;
+  };
 
   startBtn.addEventListener("click", () => {
     const playerOne = playerOneInput.value || "Player 1 (x)";
     const playerTwo = playerTwoInput.value || "Player 2 (o)";
-
     game.updatePlayersName(playerOne, playerTwo);
     game.resetGame();
     renderBoard();
+    updateScoreDisplay();
 
     startBtn.style.display = "none";
     resetBtn.style.display = "inline";
@@ -224,6 +258,7 @@ const DisplayController = (() => {
 
       if (result && result.gameEnded) {
         showMessage(result.winner, result.gameEnded);
+        updateScoreDisplay();
         document.querySelector(".board").classList.add("disabled");
       }
 
@@ -248,8 +283,10 @@ const DisplayController = (() => {
     boardContainer.classList.add("disabled");
 
     game.resetGame();
+    game.resetPlayersWonGames();
     renderBoard();
     clearMessage();
+    updateScoreDisplay();
 
     startBtn.style.display = "inline";
     resetBtn.style.display = "none";
@@ -266,6 +303,7 @@ const DisplayController = (() => {
     boardContainer.textContent = "";
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer().name;
+    updateScoreDisplay();
 
     if (game.isGameOver()) {
       playerTurn.textContent = "Game Over";
