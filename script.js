@@ -191,10 +191,11 @@ const DisplayController = (() => {
   const newGameBtn = document.querySelector("#new-game");
   const playerOneInput = document.querySelector("#player-one");
   const playerTwoInput = document.querySelector("#player-two");
+  const turnText = "'s turn";
 
   startBtn.addEventListener("click", () => {
-    const playerOne = playerOneInput.value || "Player 1 (X)";
-    const playerTwo = playerTwoInput.value || "Player 2 (O)";
+    const playerOne = playerOneInput.value || "Player 1 (x)";
+    const playerTwo = playerTwoInput.value || "Player 2 (o)";
 
     game.updatePlayersName(playerOne, playerTwo);
     game.resetGame();
@@ -203,7 +204,8 @@ const DisplayController = (() => {
     startBtn.style.display = "none";
     resetBtn.style.display = "inline";
     newGameBtn.style.display = "inline";
-    playerTurn.textContent = game.getActivePlayer().name;
+    playerTurn.textContent = `${game.getActivePlayer().name}${turnText}`;
+    /* game.getActivePlayer().name; */
 
     playerOneInput.disabled = true;
     playerTwoInput.disabled = true;
@@ -222,9 +224,10 @@ const DisplayController = (() => {
 
       if (result && result.gameEnded) {
         showMessage(result.winner, result.gameEnded);
+        document.querySelector(".board").classList.add("disabled");
       }
 
-      renderBoard();
+      renderBoard(row, col);
     }
   });
 
@@ -238,6 +241,7 @@ const DisplayController = (() => {
     }
     renderBoard();
     clearMessage();
+    document.querySelector(".board").classList.remove("disabled");
   });
 
   newGameBtn.addEventListener("click", () => {
@@ -258,15 +262,15 @@ const DisplayController = (() => {
     playerTwoInput.value = "";
   });
 
-  const renderBoard = () => {
+  const renderBoard = (newRow = null, newCol = null) => {
     boardContainer.textContent = "";
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer().name;
 
     if (game.isGameOver()) {
       playerTurn.textContent = "Game Over";
-    } else {
-      playerTurn.textContent = activePlayer;
+    } else if (activePlayer) {
+      playerTurn.textContent = `${activePlayer}${turnText}`;
     }
 
     board.forEach((row, i) => {
@@ -277,9 +281,25 @@ const DisplayController = (() => {
         cellDiv.dataset.col = j;
 
         const value = cell.getValue();
-        if (value === 1) cellDiv.textContent = "X";
-        else if (value === 2) cellDiv.textContent = "O";
-
+        if (value === 1) {
+          const mark = document.createElement("span");
+          mark.textContent = "X";
+          mark.classList.add("player-one");
+          // Only animate if this is the new cell being marked
+          if (i === newRow && j === newCol) {
+            mark.classList.add("cell-mark");
+          }
+          cellDiv.appendChild(mark);
+        } else if (value === 2) {
+          const mark = document.createElement("span");
+          mark.textContent = "O";
+          mark.classList.add("player-two");
+          // Only animate if this is the new cell being marked
+          if (i === newRow && j === newCol) {
+            mark.classList.add("cell-mark");
+          }
+          cellDiv.appendChild(mark);
+        }
         boardContainer.appendChild(cellDiv);
       });
     });
